@@ -1,30 +1,32 @@
 import { Link } from 'react-router-dom';
 import { Person } from '../types';
 
-interface Props {
-  name: string | null;
-  people: Person[];
+interface PersonLinkProps {
+  person?: Person | null;
+  name?: string;
+  onClick?: () => void; // для row selection
 }
 
-export const PersonLink: React.FC<Props> = ({ name, people }) => {
-  if (!name) {
-    return <>-</>;
+export const PersonLink: React.FC<PersonLinkProps> = ({
+  person,
+  name,
+  onClick,
+}) => {
+  if (person) {
+    return (
+      <Link
+        to={`/people/${person.slug}`}
+        className={person.sex === 'f' ? 'has-text-danger' : 'has-text-link'}
+        onClick={onClick}
+      >
+        {person.name}
+      </Link>
+    );
   }
 
-  const found = people.find(
-    person => person.name.toLowerCase() === name.toLowerCase(),
-  );
-
-  if (!found) {
-    return <>{name}</>;
+  if (name) {
+    return <span>{name}</span>;
   }
 
-  return (
-    <Link
-      to={`/people/${found.slug}`}
-      className={found.sex === 'f' ? 'has-text-danger' : 'has-text-link'}
-    >
-      {found.name}
-    </Link>
-  );
+  return <>-</>;
 };

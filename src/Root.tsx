@@ -7,7 +7,7 @@ import {
 import { App } from './App';
 import { HomePage } from './components/HomePage';
 import { NotFoundPage } from './components/NotFoundPage';
-import { PeoplePage } from './components/PeoplePage';
+import { PeoplesPage } from './components/PeoplePage';
 
 export const Root = () => (
   <Router>
@@ -18,8 +18,8 @@ export const Root = () => (
         <Route path="home" element={<Navigate to="/" replace />} />
 
         <Route path="people">
-          <Route index element={<PeoplePage />} />
-          <Route path=":personId" element={<PeoplePage />} />
+          <Route index element={<PeoplesPage />} />
+          <Route path=":slug" element={<PeoplesPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

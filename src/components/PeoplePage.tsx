@@ -3,15 +3,15 @@ import { getPeople } from '../api';
 import { Loader } from './Loader';
 import { PeopleTable } from './PeopleTable';
 import { Person } from '../types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export const PeoplePage = () => {
+export const PeoplesPage = () => {
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const params = useParams<{ personId?: string }>();
-  const selectedSlug = params.personId;
+  const { slug } = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,30 +38,11 @@ export const PeoplePage = () => {
         ) : (
           <PeopleTable
             people={people}
-            selectedSlug={selectedSlug}
-            onSelect={() => {}}
+            selectedSlug={slug}
+            onSelect={clickedSlug => navigate(`/people/${clickedSlug}`)}
           />
         )}
       </div>
     </section>
   );
 };
-/* 
-          {isLoading && <Loader />}
-
-        {error ? (
-          <p data-cy="peopleLoadingError" className="has-text-danger">
-            Something went wrong
-          </p>
-        ) : null}
-
-        {!isLoading && !error ? (
-          <PeopleTable
-            people={people}
-            selectedSlug={selectedSlug}
-            onSelect={setSelectedSlug}
-          />
-        ) : (
-          <p data-cy="noPeopleMessage">There are no people on the server</p>
-        )}
-*/

@@ -1,14 +1,26 @@
-import { Link } from 'react-router-dom';
 import { Person } from '../types';
 import { PersonLink } from './PersonLink';
 
-interface Props {
+interface PeopleTableProps {
   people: Person[];
   selectedSlug?: string;
   onSelect: (slug: string) => void;
 }
 
-export const PeopleTable: React.FC<Props> = ({
+const ParentName: React.FC<{ name: string | null; people: Person[] }> = ({
+  name,
+  people,
+}) => {
+  if (!name) {
+    return <>-</>;
+  }
+
+  const found = people.find(p => p.name.toLowerCase() === name.toLowerCase());
+
+  return <PersonLink person={found || null} name={name} />;
+};
+
+export const PeopleTable: React.FC<PeopleTableProps> = ({
   people,
   selectedSlug,
   onSelect,
@@ -36,27 +48,25 @@ export const PeopleTable: React.FC<Props> = ({
             className={
               person.slug === selectedSlug ? 'has-background-warning' : ''
             }
-            onClick={() => onSelect(person.slug)}
             data-cy="person"
           >
             <td>
-              <Link
-                to={`/people/${person.slug}`}
-                className={
-                  person.sex === 'f' ? 'has-text-danger' : 'has-text-link'
-                }
-              >
-                {person.name}
-              </Link>
+              <PersonLink
+                person={person}
+                onClick={() => onSelect(person.slug)}
+              />
             </td>
+
             <td>{person.sex}</td>
             <td>{person.born}</td>
             <td>{person.died}</td>
+
             <td>
-              <PersonLink name={person.motherName} people={people} />
+              <ParentName name={person.motherName} people={people} />
             </td>
+
             <td>
-              <PersonLink name={person.fatherName} people={people} />
+              <ParentName name={person.fatherName} people={people} />
             </td>
           </tr>
         ))}
